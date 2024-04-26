@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "749942083161",
+    "project_id": "hotel-d4fc4",
+    "storage_bucket": "hotel-d4fc4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:749942083161:android:d641d30443f790d0d4eb48",
+        "android_client_info": {
+          "package_name": "com.example.hotel"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVAOOmYBXACkbIDKxsZd_jzBm58RQbZHk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
