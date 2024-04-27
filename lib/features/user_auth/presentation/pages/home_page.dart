@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'user_profile_page.dart'; // Make sure to import the UserProfilePage
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -14,8 +14,8 @@ class HomePage extends StatelessWidget {
             icon: Icon(Icons.logout),
             onPressed: () {
               // Implement sign out functionality
-              Fluttertoast.showToast(msg: "Successfully signed out");
-              Navigator.pushNamed(context, '/login');
+              Navigator.pushNamed(context,
+                  '/login'); // Modify as needed for actual sign-out logic
             },
           )
         ],
@@ -29,23 +29,32 @@ class HomePage extends StatelessWidget {
           mainAxisSpacing: 4.0,
           crossAxisSpacing: 4.0,
           children: <Widget>[
-            _buildCard('Book a Room', Icons.hotel, context),
-            _buildCard('View Reservations', Icons.calendar_today, context),
-            _buildCard('Room Service', Icons.room_service, context),
-            _buildCard('Profile', Icons.person, context),
+            _buildCard('Book a Room', Icons.hotel, context, () {
+              // Implement action for Book a Room
+            }),
+            _buildCard('View Reservations', Icons.calendar_today, context, () {
+              // Implement action for View Reservations
+            }),
+            _buildCard('Room Service', Icons.room_service, context, () {
+              // Implement action for Room Service
+            }),
+            _buildCard('Profile', Icons.person, context, () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const UserProfilePage()));
+            }),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildCard(String title, IconData icon, BuildContext context) {
+  Widget _buildCard(
+      String title, IconData icon, BuildContext context, VoidCallback onTap) {
     return Card(
       child: InkWell(
-        onTap: () {
-          // Implement onTap functionality based on the title or pass parameters
-          Fluttertoast.showToast(msg: "$title clicked");
-        },
+        onTap: onTap,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[

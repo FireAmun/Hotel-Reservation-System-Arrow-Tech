@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 // ignore: unnecessary_import
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel/features/user_auth/presentation/pages/forgot_password_page.dart';
 import 'package:hotel/features/user_auth/presentation/pages/sign_up_page.dart';
 import 'package:hotel/features/user_auth/presentation/widgets/form_container_widget.dart';
 import 'package:hotel/global/common/toast.dart';
@@ -133,6 +134,21 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(
+                height: 10,
+              ),
+              GestureDetector(
+                onTap: () {
+                  _forgotPassword();
+                },
+                child: const Text(
+                  "Forgot Password?",
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(
                 height: 20,
               ),
               Row(
@@ -215,5 +231,12 @@ class _LoginPageState extends State<LoginPage> {
     } catch (e) {
       showToast(message: "some error occured $e");
     }
+  }
+
+  void _forgotPassword() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
+    );
   }
 }
