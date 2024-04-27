@@ -39,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text("Login"),
+        title: const Text("BolehBook"),
       ),
       body: Center(
         child: Padding(
@@ -209,7 +209,10 @@ class _LoginPageState extends State<LoginPage> {
 
   _signInWithGoogle() async {
     // ignore: no_leading_underscores_for_local_identifiers
-    final GoogleSignIn _googleSignIn = GoogleSignIn();
+    final GoogleSignIn _googleSignIn = GoogleSignIn(
+      clientId:
+          '749942083161-drbnt9qgb2cd0qtqv3421q5tca7oodea.apps.googleusercontent.com',
+    );
 
     try {
       final GoogleSignInAccount? googleSignInAccount =
@@ -229,7 +232,7 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pushNamed(context, "/home");
       }
     } catch (e) {
-      showToast(message: "some error occured $e");
+      showToast(message: "Some error occurred: $e");
     }
   }
 

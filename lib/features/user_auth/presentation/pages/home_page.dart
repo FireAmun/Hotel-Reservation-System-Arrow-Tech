@@ -8,10 +8,10 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Hotel Dashboard"),
+        title: const Text("Hotel Dashboard"),
         actions: [
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
             onPressed: () {
               // Implement sign out functionality
               Navigator.pushNamed(context,
@@ -21,11 +21,11 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: GridView.count(
           crossAxisCount: 2,
           childAspectRatio: 1.0,
-          padding: EdgeInsets.all(4.0),
+          padding: const EdgeInsets.all(4.0),
           mainAxisSpacing: 4.0,
           crossAxisSpacing: 4.0,
           children: <Widget>[
@@ -59,7 +59,7 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Icon(icon, size: 40.0),
-            Text(title, style: TextStyle(fontSize: 16.0)),
+            Text(title, style: const TextStyle(fontSize: 16.0)),
           ],
         ),
       ),

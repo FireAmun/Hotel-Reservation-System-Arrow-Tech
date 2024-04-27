@@ -1,9 +1,12 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _UserProfilePageState createState() => _UserProfilePageState();
 }
 
@@ -17,10 +20,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("User Profile"),
+        title: const Text("User Profile"),
         actions: [
           IconButton(
-            icon: Icon(Icons.edit),
+            icon: const Icon(Icons.edit),
             onPressed: () {
               // Implement editing functionality
               _editProfile(context);
@@ -29,7 +32,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
         ],
       ),
       body: ListView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         children: <Widget>[
           _userInfoTile("Username", username),
           _userInfoTile("Email", email),
@@ -41,7 +44,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   Widget _userInfoTile(String label, String value) {
     return ListTile(
-      title: Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+      title: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
       subtitle: Text(value),
     );
   }
@@ -52,22 +55,22 @@ class _UserProfilePageState extends State<UserProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Edit Profile"),
+          title: const Text("Edit Profile"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               TextField(
-                decoration: InputDecoration(labelText: "Username"),
+                decoration: const InputDecoration(labelText: "Username"),
                 controller: TextEditingController(text: username),
                 onChanged: (value) => username = value,
               ),
               TextField(
-                decoration: InputDecoration(labelText: "Email"),
+                decoration: const InputDecoration(labelText: "Email"),
                 controller: TextEditingController(text: email),
                 onChanged: (value) => email = value,
               ),
               TextField(
-                decoration: InputDecoration(labelText: "Address"),
+                decoration: const InputDecoration(labelText: "Address"),
                 controller: TextEditingController(text: address),
                 onChanged: (value) => address = value,
               ),
@@ -75,14 +78,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text("Save"),
+              child: const Text("Save"),
               onPressed: () {
                 setState(() {});
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text("Cancel"),
+              child: const Text("Cancel"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
