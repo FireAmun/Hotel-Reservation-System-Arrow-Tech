@@ -41,6 +41,7 @@ dependencies:
   fluttertoast: ^8.2.5
   font_awesome_flutter: ^10.7.0
   google_sign_in: ^6.2.1
+  cached_network_image: ^3.3.1
 cloud_firestore: ^4.17.2
 firebase_auth: ^4.19.4
 firebase_storage: ^11.7.4
@@ -61,7 +62,12 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  assets:
+    - lib/features/pics/hotel1.png
+    - lib/features/pics/hotel2.png
+    - lib/features/pics/hotel3.png
+    - lib/features/pics/hotel4.png
+    - lib/features/pics/hotel5.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

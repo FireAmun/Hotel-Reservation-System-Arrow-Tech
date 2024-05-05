@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hotel/features/user_auth/presentation/pages/HotelsPage.dart';
+import 'package:hotel/features/user_auth/presentation/pages/OrderRoomServicePage.dart';
 import 'user_profile_page.dart'; // Make sure to import the UserProfilePage
 
 class HomePage extends StatelessWidget {
@@ -30,13 +32,17 @@ class HomePage extends StatelessWidget {
           crossAxisSpacing: 4.0,
           children: <Widget>[
             _buildCard('Book a Room', Icons.hotel, context, () {
-              // Implement action for Book a Room
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => HotelsPage()));
             }),
             _buildCard('View Reservations', Icons.calendar_today, context, () {
               // Implement action for View Reservations
             }),
             _buildCard('Room Service', Icons.room_service, context, () {
-              // Implement action for Room Service
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => OrderRoomServicePage()));
             }),
             _buildCard('Profile', Icons.person, context, () {
               Navigator.push(
