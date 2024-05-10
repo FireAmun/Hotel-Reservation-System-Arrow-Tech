@@ -1,5 +1,5 @@
-// RoomsPage.dart
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RoomsPage extends StatefulWidget {
   @override
@@ -14,7 +14,7 @@ class _RoomsPageState extends State<RoomsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Book a Room')),
+      appBar: AppBar(title: Text('Rooms Page')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -22,7 +22,8 @@ class _RoomsPageState extends State<RoomsPage> {
             // Date picker
             Card(
               child: ListTile(
-                title: Text('Select Date'),
+                title: Text(
+                    'Selected Date: ${_selectedDate.toLocal().toString().split(' ')[0]}'),
                 trailing: Icon(Icons.calendar_today),
                 onTap: () async {
                   final DateTime? picked = await showDatePicker(
@@ -43,7 +44,7 @@ class _RoomsPageState extends State<RoomsPage> {
             // Time picker
             Card(
               child: ListTile(
-                title: Text('Select Time'),
+                title: Text('Selected Time: ${_selectedTime.format(context)}'),
                 trailing: Icon(Icons.access_time),
                 onTap: () async {
                   final TimeOfDay? picked = await showTimePicker(
@@ -61,9 +62,11 @@ class _RoomsPageState extends State<RoomsPage> {
 
             // Room type dropdown
             Card(
-              child: DropdownButton<String>(
+              child: DropdownButtonFormField<String>(
                 value: _selectedRoomType,
-                hint: Text('Select Room Type'),
+                decoration: InputDecoration(
+                  labelText: 'Select Room Type',
+                ),
                 items: <String>['Single', 'Double', 'Suite']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
@@ -77,6 +80,19 @@ class _RoomsPageState extends State<RoomsPage> {
                   });
                 },
               ),
+            ),
+
+            // Submit button
+            ElevatedButton(
+              child: Text('Submit'),
+              onPressed: () {
+                // Store the selected date, time, and room type in Firestore
+                FirebaseFirestore.instance.collection('rooms').add({
+                  'date': _selectedDate,
+                  'time': _selectedTime.format(context),
+                  'roomType': _selectedRoomType,
+                });
+              },
             ),
           ],
         ),

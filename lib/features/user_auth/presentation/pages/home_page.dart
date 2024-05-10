@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hotel/features/user_auth/presentation/pages/HotelsPage.dart';
 import 'package:hotel/features/user_auth/presentation/pages/OrderRoomServicePage.dart';
+import 'ReservationsPage.dart';
 import 'user_profile_page.dart'; // Make sure to import the UserProfilePage
 
 class HomePage extends StatelessWidget {
@@ -36,7 +37,8 @@ class HomePage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => HotelsPage()));
             }),
             _buildCard('View Reservations', Icons.calendar_today, context, () {
-              // Implement action for View Reservations
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ReservationsPage()));
             }),
             _buildCard('Room Service', Icons.room_service, context, () {
               Navigator.push(
@@ -45,10 +47,8 @@ class HomePage extends StatelessWidget {
                       builder: (context) => OrderRoomServicePage()));
             }),
             _buildCard('Profile', Icons.person, context, () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const UserProfilePage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => UserProfilePage()));
             }),
           ],
         ),

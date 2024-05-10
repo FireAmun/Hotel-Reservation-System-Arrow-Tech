@@ -1,5 +1,5 @@
-// OrderRoomServicePage.dart
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class OrderRoomServicePage extends StatefulWidget {
   @override
@@ -10,6 +10,7 @@ class _OrderRoomServicePageState extends State<OrderRoomServicePage> {
   String? _selectedServiceType;
   String _specialRequest = '';
   int _quantity = 1;
+  String _roomNumber = '';
 
   @override
   Widget build(BuildContext context) {
@@ -21,21 +22,38 @@ class _OrderRoomServicePageState extends State<OrderRoomServicePage> {
           children: [
             // Service type dropdown
             Card(
+              child: DropdownButtonFormField<String>(
+                value: _selectedServiceType,
+                decoration: InputDecoration(
+                  labelText: 'Select Service Type',
+                ),
+                items: <String>['Food', 'Cleaning', 'Laundry']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedServiceType = newValue;
+                  });
+                },
+              ),
+            ),
+
+            // Room number text field
+            Card(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: DropdownButton<String>(
-                  value: _selectedServiceType,
-                  hint: Text('Select Service Type'),
-                  items: <String>['Food', 'Cleaning', 'Laundry']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Room Number',
+                  ),
+                  onChanged: (value) {
                     setState(() {
-                      _selectedServiceType = newValue;
+                      _roomNumber = value;
                     });
                   },
                 ),
@@ -95,8 +113,33 @@ class _OrderRoomServicePageState extends State<OrderRoomServicePage> {
             ElevatedButton(
               child: Text('Submit'),
               onPressed: () {
-                // Create a new Order object and navigate to a confirmation page
-                // ...
+                // Store the order details in Firestore
+                FirebaseFirestore.instance.collection('orders').add({
+                  'serviceType': _selectedServiceType,
+                  'roomNumber': _roomNumber,
+                  'quantity': _quantity,
+                  'specialRequest': _specialRequest,
+                });
+
+                // Show a confirmation dialog or navigate to a new page if needed
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Order Submitted'),
+                      content:
+                          Text('Your order has been submitted successfully.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('OK'),
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
             ),
           ],
