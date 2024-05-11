@@ -1,98 +1,123 @@
-// ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class UserProfilePage extends StatefulWidget {
-  const UserProfilePage({super.key});
-
   @override
-  // ignore: library_private_types_in_public_api
   _UserProfilePageState createState() => _UserProfilePageState();
 }
 
 class _UserProfilePageState extends State<UserProfilePage> {
-  // Mock user data - you might want to fetch this from a database or state management solution
-  String username = "Amar";
-  String email = "amar.doe@example.com";
-  String address = "Johor, skudai, Malaysia";
+  final _formKey = GlobalKey<FormState>();
+  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _addressController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userData = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      _usernameController.text = userData['username'];
+      _emailController.text = userData['email'];
+      _addressController.text = userData['address'];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("User Profile"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
-              // Implement editing functionality
-              _editProfile(context);
-            },
-          )
-        ],
+        title: Text('User Profile'),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: <Widget>[
-          _userInfoTile("Username", username),
-          _userInfoTile("Email", email),
-          _userInfoTile("Address", address),
-        ],
-      ),
-    );
-  }
-
-  Widget _userInfoTile(String label, String value) {
-    return ListTile(
-      title: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text(value),
-    );
-  }
-
-  void _editProfile(BuildContext context) {
-    // Simple dialog to edit user info
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Edit Profile"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: ListView(
             children: <Widget>[
-              TextField(
-                decoration: const InputDecoration(labelText: "Username"),
-                controller: TextEditingController(text: username),
-                onChanged: (value) => username = value,
+              TextFormField(
+                controller: _usernameController,
+                decoration: InputDecoration(
+                  labelText: 'Username',
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.all(10.0),
+                ),
+                style: TextStyle(fontSize: 18.0),
               ),
-              TextField(
-                decoration: const InputDecoration(labelText: "Email"),
-                controller: TextEditingController(text: email),
-                onChanged: (value) => email = value,
+              SizedBox(height: 20.0),
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.all(10.0),
+                ),
+                style: TextStyle(fontSize: 18.0),
               ),
-              TextField(
-                decoration: const InputDecoration(labelText: "Address"),
-                controller: TextEditingController(text: address),
-                onChanged: (value) => address = value,
+              SizedBox(height: 20.0),
+              TextFormField(
+                controller: _addressController,
+                decoration: InputDecoration(
+                  labelText: 'Address',
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.all(10.0),
+                ),
+                style: TextStyle(fontSize: 18.0),
+              ),
+              SizedBox(height: 20.0),
+              ElevatedButton(
+                child: const Text("Save"),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.blue, // text color
+                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                  textStyle: TextStyle(fontSize: 20),
+                ),
+                onPressed: () async {
+                  // Update the user profile in Firestore
+                  final user = FirebaseAuth.instance.currentUser;
+                  if (user != null) {
+                    try {
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(user.uid)
+                          .set({
+                        'username': _usernameController.text,
+                        'email': _emailController.text,
+                        'address': _addressController.text,
+                      }, SetOptions(merge: true));
+
+                      // Show a success message
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text('Profile updated successfully!')),
+                      );
+                    } catch (e) {
+                      // Show an error message
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text(
+                                'An error occurred while updating the profile.')),
+                      );
+                    }
+                  }
+
+                  Navigator.of(context).pop();
+                },
               ),
             ],
           ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text("Save"),
-              onPressed: () {
-                setState(() {});
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text("Cancel"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+        ),
+      ),
     );
   }
 }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:hotel/features/user_auth/presentation/pages/RoomsPage.dart';
 
+import 'ReservationsPage.dart';
+
 class Hotel {
   final String name;
   final String imageUrl;
@@ -39,43 +41,49 @@ class _HotelsPageState extends State<HotelsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Hotels'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              // Implement search functionality
-            },
-          ),
-        ],
       ),
       body: ListView.builder(
         itemCount: hotels.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            height: 300,
             child: Card(
-              elevation: 4, // Add elevation for shadow effect
-              child: ListTile(
-                leading: Hero(
-                  tag: hotels[index].imageUrl,
-                  child: CachedNetworkImage(
-                    imageUrl: hotels[index].imageUrl,
-                    placeholder: (context, url) => CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child:
+                        Image.asset(hotels[index].imageUrl, fit: BoxFit.cover),
                   ),
-                ),
-                title: Text(hotels[index].name),
-                trailing: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    textStyle: TextStyle(color: Colors.white),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      hotels[index].name,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                  child: Text('Book a Room'),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => RoomsPage()));
-                  },
-                ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => RoomsPage()),
+                        );
+                      },
+                      child: Text(
+                        'Make a Reservation',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.blue),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           );
