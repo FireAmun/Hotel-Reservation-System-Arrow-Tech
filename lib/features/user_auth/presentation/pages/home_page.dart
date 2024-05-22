@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hotel/features/user_auth/presentation/pages/HotelsPage.dart';
+import 'package:hotel/features/user_auth/presentation/pages/MakeComplaintsPage.dart';
 import 'package:hotel/features/user_auth/presentation/pages/OrderRoomServicePage.dart';
 import 'ReservationsPage.dart';
 import 'user_profile_page.dart'; // Make sure to import the UserProfilePage
@@ -49,6 +50,12 @@ class HomePage extends StatelessWidget {
             _buildCard('Profile', Icons.person, context, () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => UserProfilePage()));
+            }),
+            _buildCard('Complaints', Icons.report_problem, context, () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MakeComplaintsPage()));
             }),
           ],
         ),

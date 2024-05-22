@@ -12,6 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../firebase_auth_implementation/firebase_auth_services.dart';
+import 'adminloginpage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -176,6 +177,21 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ],
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AdminLoginPage()),
+                  );
+                },
+                child: const Text(
+                  "Admin Login",
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),
