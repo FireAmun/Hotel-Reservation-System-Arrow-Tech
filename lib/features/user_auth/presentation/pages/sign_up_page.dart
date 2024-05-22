@@ -7,7 +7,7 @@ import 'package:hotel/global/common/toast.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
-
+//This is Sign Up page
   @override
   State<SignUpPage> createState() => _SignUpPageState();
 }

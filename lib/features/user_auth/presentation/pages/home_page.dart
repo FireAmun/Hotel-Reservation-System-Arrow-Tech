@@ -5,6 +5,7 @@ import 'package:hotel/features/user_auth/presentation/pages/OrderRoomServicePage
 import 'ReservationsPage.dart';
 import 'user_profile_page.dart'; // Make sure to import the UserProfilePage
 
+// this is home page
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
