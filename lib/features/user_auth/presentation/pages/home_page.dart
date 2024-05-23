@@ -4,6 +4,7 @@ import 'package:hotel/features/user_auth/presentation/pages/MakeComplaintsPage.d
 import 'package:hotel/features/user_auth/presentation/pages/OrderRoomServicePage.dart';
 import 'ReservationsPage.dart';
 import 'user_profile_page.dart'; // Make sure to import the UserProfilePage
+import 'package:hotel/features/user_auth/presentation/pages/Admin_ViewComplaintsPage.dart';
 
 // this is home page
 class HomePage extends StatelessWidget {

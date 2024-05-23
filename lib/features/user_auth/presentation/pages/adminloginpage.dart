@@ -57,12 +57,12 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                   if (adminDoc.exists) {
                     if (adminDoc['adminId'] == adminId &&
                         adminDoc['password'] == password) {
-                      /* Navigator.push(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => AdminDashboardPage(),
                         ),
-                      );*/
+                      );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Invalid admin ID or password')),
