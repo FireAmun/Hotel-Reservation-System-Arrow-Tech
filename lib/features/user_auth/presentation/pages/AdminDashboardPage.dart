@@ -39,7 +39,7 @@ class AdminDashboardPage extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AdminComplaintsPage()));
+                      builder: (context) => AdminViewComplaintsPage()));
             }),
           ],
         ),
