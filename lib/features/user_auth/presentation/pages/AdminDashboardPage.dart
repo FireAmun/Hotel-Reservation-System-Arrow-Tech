@@ -4,7 +4,7 @@ import 'package:hotel/features/user_auth/presentation/pages/Admin_View_Reservati
 
 class AdminDashboardPage extends StatelessWidget {
   const AdminDashboardPage({Key? key});
-
+//admin
   @override
   Widget build(BuildContext context) {
     return Scaffold(
