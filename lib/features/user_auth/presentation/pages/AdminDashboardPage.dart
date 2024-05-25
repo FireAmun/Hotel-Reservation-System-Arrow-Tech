@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hotel/features/user_auth/presentation/pages/Admin_ViewComplaintsPage.dart';
 import 'package:hotel/features/user_auth/presentation/pages/Admin_View_Reservation.dart';
+import 'package:hotel/features/user_auth/presentation/pages/Adminviewroomservice.dart';
 
 class AdminDashboardPage extends StatelessWidget {
   const AdminDashboardPage({Key? key});
@@ -33,13 +34,19 @@ class AdminDashboardPage extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AdminReservationsPage()));
+                      builder: (context) => AdminViewReservationPage()));
             }),
             _buildCard('Complaints', Icons.report_problem, context, () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => AdminViewComplaintsPage()));
+            }),
+            _buildCard('View Room service', Icons.fastfood, context, () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AdminViewRoomServicePage()));
             }),
           ],
         ),

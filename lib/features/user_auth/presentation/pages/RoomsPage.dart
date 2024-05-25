@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RoomsPage extends StatefulWidget {
   @override
@@ -144,8 +145,16 @@ class _RoomsPageState extends State<RoomsPage> {
             child: Text('Submit'),
             onPressed: () async {
               try {
+                // Get the current user
+                User? currentUser = FirebaseAuth.instance.currentUser;
+
+                if (currentUser == null) {
+                  throw Exception("User is not logged in");
+                }
+
                 // Store the selected date, time, room type, and additional information in Firestore
                 await FirebaseFirestore.instance.collection('rooms').add({
+                  'userId': currentUser.uid,
                   'date': _selectedDate,
                   'time': _selectedTime.format(context),
                   'roomType': _selectedRoomType,
