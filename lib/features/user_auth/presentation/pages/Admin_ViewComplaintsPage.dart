@@ -68,35 +68,39 @@ class _AdminViewComplaintsPageState extends State<AdminViewComplaintsPage> {
     );
   }
 
-  Future<void> _sendReply(BuildContext context, String? complaintId,
-      String? userEmail, String reply) async {
+Future<void> _sendReply(BuildContext context, String? complaintId,
+    String? userEmail, String reply) async {
+  try {
+    // Add reply to Firestore
+    await FirebaseFirestore.instance
+        .collection('complaints')
+        .doc(complaintId)
+        .update({
+      'reply': reply,
+      'repliedAt': FieldValue.serverTimestamp(),
+    });
+
+    // Send reply via email
+    final smtpServer = gmail('arrowtech5563@gmail.com', 'szttvmusygjgjazq');
+    final message = Message()
+      ..from = Address('arrowtech5563@gmail.com', 'Arrow Tech')
+      ..recipients.add(userEmail!)
+      ..subject = 'Reply to your complaint'
+      ..text = reply;
+
     try {
-      // Add reply to Firestore
-      await FirebaseFirestore.instance
-          .collection('complaints')
-          .doc(complaintId)
-          .update({
-        'reply': reply,
-        'repliedAt': FieldValue.serverTimestamp(),
-      });
-
-      // Send reply via email
-      final smtpServer = gmail('arrowtech5563@gmail.com', 'szttvmusygjgjazq');
-      final message = Message()
-        ..from = Address('arrowtech5563@gmail.com', 'Arrow Tech')
-        ..recipients.add(userEmail!)
-        ..subject = 'Reply to your complaint'
-        ..text = reply;
-
-      try {
-        final sendReport = await send(message, smtpServer);
-        print('Message sent: ' + sendReport.toString());
-      } catch (e) {
-        print('Message not sent.');
-        print(e.toString());
-      }
+      final sendReport = await send(message, smtpServer);
+      print('Message sent: ' + sendReport.toString());
+      Navigator.of(context).pop(); // Close the dialog
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Message sent successfully!')),
+      );
     } catch (e) {
-      Navigator.of(context).pop();
+      print('Message not sent.');
+      print(e.toString());
     }
+  } catch (e) {
+    Navigator.of(context).pop();
   }
+}
 }
