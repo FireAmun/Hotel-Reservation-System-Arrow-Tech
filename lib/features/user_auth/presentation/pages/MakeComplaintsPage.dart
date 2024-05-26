@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 class MakeComplaintsPage extends StatefulWidget {
   @override
   _MakeComplaintsPageState createState() => _MakeComplaintsPageState();
@@ -8,9 +8,6 @@ class MakeComplaintsPage extends StatefulWidget {
 
 class _MakeComplaintsPageState extends State<MakeComplaintsPage> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
   final _complaintController = TextEditingController();
 
   @override
@@ -24,36 +21,6 @@ class _MakeComplaintsPageState extends State<MakeComplaintsPage> {
         child: Column(
           children: <Widget>[
             TextFormField(
-              controller: _nameController,
-              decoration: InputDecoration(labelText: 'Name'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your name';
-                }
-                return null;
-              },
-            ),
-            TextFormField(
-              controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your email';
-                }
-                return null;
-              },
-            ),
-            TextFormField(
-              controller: _phoneController,
-              decoration: InputDecoration(labelText: 'Phone Number'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your phone number';
-                }
-                return null;
-              },
-            ),
-            TextFormField(
               controller: _complaintController,
               decoration: InputDecoration(labelText: 'Complaint'),
               validator: (value) {
@@ -64,31 +31,36 @@ class _MakeComplaintsPageState extends State<MakeComplaintsPage> {
               },
             ),
             ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState?.validate() ?? false) {
-                  final name = _nameController.text;
-                  final email = _emailController.text;
-                  final phone = _phoneController.text;
-                  final complaint = _complaintController.text;
+   onPressed: () async {
+    if (_formKey.currentState?.validate() ?? false) {
+      final complaint = _complaintController.text;
 
-                  FirebaseFirestore.instance.collection('complaints').add({
-                    'name': name,
-                    'email': email,
-                    'phone': phone,
-                    'complaint': complaint,
-                    'timestamp': DateTime.now(),
-                  });
+      // Get the current user's ID
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final userId = user.uid;
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Complaint submitted')),
-                  );
+        // Fetch the user's information from Firestore
+        final userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+        final username = userDoc['username'];
+        final email = userDoc['email'];
 
-                  _nameController.clear();
-                  _emailController.clear();
-                  _phoneController.clear();
-                  _complaintController.clear();
-                }
-              },
+        FirebaseFirestore.instance.collection('complaints').add({
+          'username': username,
+          'email': email,
+          'complaint': complaint,
+          'timestamp': DateTime.now(),
+          'userId': userId,
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Complaint submitted')),
+        );
+
+        _complaintController.clear();
+      }
+    }
+  },
               child: Text('Submit'),
             ),
           ],

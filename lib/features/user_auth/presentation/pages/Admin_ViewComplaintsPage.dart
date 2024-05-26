@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 
@@ -24,20 +25,23 @@ class _AdminViewComplaintsPageState extends State<AdminViewComplaintsPage> {
           if (!snapshot.hasData) {
             return CircularProgressIndicator();
           }
+return ListView.builder(
+  itemCount: snapshot.data?.docs.length ?? 0,
+  itemBuilder: (context, index) {
+    final doc = snapshot.data?.docs[index];
+    final data = doc?.data() as Map<String, dynamic>?;
+    final complaint = data?['complaint'] ?? 'N/A';
+    final userId = data?['userId'] ?? 'N/A';
+    final userEmail = data?['email'] ?? 'N/A';
+    final username = data?['username'] ?? 'N/A';
 
-          return ListView.builder(
-            itemCount: snapshot.data?.docs.length ?? 0,
-            itemBuilder: (context, index) {
-              final doc = snapshot.data?.docs[index];
-              final complaint = doc?['complaint'];
-              final userEmail = doc?['email'];
-
-              return ListTile(
-                title: Text(complaint),
-                onTap: () => _showReplyDialog(context, doc?.id, userEmail),
-              );
-            },
-          );
+    return ListTile(
+      title: Text('Complaint: $complaint'),
+      subtitle: Text('User: $username\nEmail: $userEmail'),
+      onTap: () => _showReplyDialog(context, doc?.id, userEmail),
+    );
+  },
+);
         },
       ),
     );
@@ -68,39 +72,39 @@ class _AdminViewComplaintsPageState extends State<AdminViewComplaintsPage> {
     );
   }
 
-Future<void> _sendReply(BuildContext context, String? complaintId,
-    String? userEmail, String reply) async {
-  try {
-    // Add reply to Firestore
-    await FirebaseFirestore.instance
-        .collection('complaints')
-        .doc(complaintId)
-        .update({
-      'reply': reply,
-      'repliedAt': FieldValue.serverTimestamp(),
-    });
-
-    // Send reply via email
-    final smtpServer = gmail('arrowtech5563@gmail.com', 'szttvmusygjgjazq');
-    final message = Message()
-      ..from = Address('arrowtech5563@gmail.com', 'Arrow Tech')
-      ..recipients.add(userEmail!)
-      ..subject = 'Reply to your complaint'
-      ..text = reply;
-
+  Future<void> _sendReply(BuildContext context, String? complaintId,
+      String? userEmail, String reply) async {
     try {
-      final sendReport = await send(message, smtpServer);
-      print('Message sent: ' + sendReport.toString());
-      Navigator.of(context).pop(); // Close the dialog
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Message sent successfully!')),
-      );
+      // Add reply to Firestore
+      await FirebaseFirestore.instance
+          .collection('complaints')
+          .doc(complaintId)
+          .update({
+        'reply': reply,
+        'repliedAt': FieldValue.serverTimestamp(),
+      });
+
+      // Send reply via email
+      final smtpServer = gmail('arrowtech5563@gmail.com', 'szttvmusygjgjazq');
+      final message = Message()
+        ..from = Address('arrowtech5563@gmail.com', 'Arrow Tech')
+        ..recipients.add(userEmail!)
+        ..subject = 'Reply to your complaint'
+        ..text = reply;
+
+      try {
+        final sendReport = await send(message, smtpServer);
+        print('Message sent: ' + sendReport.toString());
+        Navigator.of(context).pop(); // Close the dialog
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Message sent successfully!')),
+        );
+      } catch (e) {
+        print('Message not sent.');
+        print(e.toString());
+      }
     } catch (e) {
-      print('Message not sent.');
-      print(e.toString());
+      Navigator.of(context).pop();
     }
-  } catch (e) {
-    Navigator.of(context).pop();
   }
-}
 }
