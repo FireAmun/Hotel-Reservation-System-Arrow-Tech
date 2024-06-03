@@ -1,6 +1,9 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 
 class RoomsPage extends StatefulWidget {
   @override
@@ -11,6 +14,8 @@ class _RoomsPageState extends State<RoomsPage> {
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
   String _selectedRoomType = 'Single';
+  bool _showQRCode = false; // Added state variable
+  bool _reservationMade = false; // Added state variable
 
   final _fullNameController = TextEditingController();
   final _passportNumberController = TextEditingController();
@@ -54,7 +59,6 @@ class _RoomsPageState extends State<RoomsPage> {
               },
             ),
           ),
-
           // Time picker
           Card(
             child: ListTile(
@@ -73,7 +77,6 @@ class _RoomsPageState extends State<RoomsPage> {
               },
             ),
           ),
-
           // Room type dropdown
           Card(
             child: DropdownButtonFormField<String>(
@@ -92,7 +95,6 @@ class _RoomsPageState extends State<RoomsPage> {
               },
             ),
           ),
-
           // Full name field
           Card(
             child: ListTile(
@@ -104,7 +106,6 @@ class _RoomsPageState extends State<RoomsPage> {
               ),
             ),
           ),
-
           // Passport number field
           Card(
             child: ListTile(
@@ -116,7 +117,6 @@ class _RoomsPageState extends State<RoomsPage> {
               ),
             ),
           ),
-
           // Phone number field
           Card(
             child: ListTile(
@@ -128,7 +128,6 @@ class _RoomsPageState extends State<RoomsPage> {
               ),
             ),
           ),
-
           // Special request field
           Card(
             child: ListTile(
@@ -140,7 +139,6 @@ class _RoomsPageState extends State<RoomsPage> {
               ),
             ),
           ),
-
           ElevatedButton(
             child: Text('Submit'),
             onPressed: () async {
@@ -153,7 +151,8 @@ class _RoomsPageState extends State<RoomsPage> {
                 }
 
                 // Store the selected date, time, room type, and additional information in Firestore
-                await FirebaseFirestore.instance.collection('rooms').add({
+                DocumentReference reservationRef =
+                    await FirebaseFirestore.instance.collection('rooms').add({
                   'userId': currentUser.uid,
                   'date': _selectedDate,
                   'time': _selectedTime.format(context),
@@ -164,11 +163,37 @@ class _RoomsPageState extends State<RoomsPage> {
                   'specialRequests': _specialRequestsController.text,
                 });
 
+                // Send reservation details via email
+                final smtpServer =
+                    gmail('arrowtech5563@gmail.com', 'szttvmusygjgjazq');
+                final message = Message()
+                  ..from = Address('arrowtech5563@gmail.com', 'Arrow Tech')
+                  ..recipients
+                      .add(currentUser.email!) // Use currentUser's email
+                  ..subject = 'Reservation Details'
+                  ..html = '''
+                      <h1>Reservation Details</h1>
+                      <p>Date: ${_selectedDate.toLocal().toString()}</p>
+                      <p>Time: ${_selectedTime.format(context)}</p>
+                      <p>Room Type: $_selectedRoomType</p>
+                      <p>Full Name: ${_fullNameController.text}</p>
+                      <p>Passport Number: ${_passportNumberController.text}</p>
+                      <p>Phone Number: ${_phoneNumberController.text}</p>
+                      <p>Special Requests: ${_specialRequestsController.text}</p>
+                      ''';
+
+                final sendReport = await send(message, smtpServer);
+                print('Message sent: ' + sendReport.toString());
+
                 // Show a success message
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                       content: Text('Room booking submitted successfully!')),
                 );
+
+                setState(() {
+                  _reservationMade = true; // Set reservationMade to true
+                });
               } catch (e) {
                 // Show an error message
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -179,6 +204,23 @@ class _RoomsPageState extends State<RoomsPage> {
               }
             },
           ),
+
+          // Button to show/hide QR Code
+          if (_reservationMade) // Only show the button if reservation is made
+            ElevatedButton(
+              child: Text(_showQRCode ? 'Hide QR Code' : 'Show QR Code'),
+              onPressed: () {
+                setState(() {
+                  _showQRCode = !_showQRCode;
+                });
+              },
+            ),
+
+          // QR Code Image
+          if (_showQRCode)
+            Card(
+              child: Image.asset('lib/features/pics/qr_code.png'),
+            ),
         ],
       ),
     );
