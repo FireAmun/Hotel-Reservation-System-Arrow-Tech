@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hotel/features/user_auth/presentation/pages/AdminAnalysisPage.dart';
 import 'package:hotel/features/user_auth/presentation/pages/Admin_ViewComplaintsPage.dart';
 import 'package:hotel/features/user_auth/presentation/pages/Admin_View_Reservation.dart';
 import 'package:hotel/features/user_auth/presentation/pages/Adminviewroomservice.dart';
@@ -47,6 +48,10 @@ class AdminDashboardPage extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (context) => AdminViewRoomServicePage()));
+            }),
+            _buildCard('Analytics', Icons.bar_chart, context, () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AdminAnalysisPage()));
             }),
           ],
         ),
