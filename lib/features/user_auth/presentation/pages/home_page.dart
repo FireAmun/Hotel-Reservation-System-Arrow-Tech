@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hotel/features/user_auth/presentation/pages/HotelsPage.dart';
 import 'package:hotel/features/user_auth/presentation/pages/MakeComplaintsPage.dart';
 import 'package:hotel/features/user_auth/presentation/pages/OrderRoomServicePage.dart';
+import 'package:hotel/features/user_auth/presentation/pages/reviews_page.dart';
 import 'ReservationsPage.dart';
 import 'user_profile_page.dart'; // Make sure to import the UserProfilePage
 import 'package:hotel/features/user_auth/presentation/pages/Admin_ViewComplaintsPage.dart';
@@ -58,6 +59,10 @@ class HomePage extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (context) => MakeComplaintsPage()));
+            }),
+            _buildCard('Give Us A Review', Icons.reviews, context, () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ReviewsPage()));
             }),
           ],
         ),

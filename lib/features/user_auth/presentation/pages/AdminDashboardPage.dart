@@ -3,6 +3,7 @@ import 'package:hotel/features/user_auth/presentation/pages/AdminAnalysisPage.da
 import 'package:hotel/features/user_auth/presentation/pages/Admin_ViewComplaintsPage.dart';
 import 'package:hotel/features/user_auth/presentation/pages/Admin_View_Reservation.dart';
 import 'package:hotel/features/user_auth/presentation/pages/Adminviewroomservice.dart';
+import 'package:hotel/features/user_auth/presentation/pages/admin_view_reviews_page.dart';
 
 class AdminDashboardPage extends StatelessWidget {
   const AdminDashboardPage({Key? key});
@@ -52,6 +53,12 @@ class AdminDashboardPage extends StatelessWidget {
             _buildCard('Analytics', Icons.bar_chart, context, () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => AdminAnalysisPage()));
+            }),
+            _buildCard('View Reviews', Icons.reviews, context, () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AdminViewReviewsPage()));
             }),
           ],
         ),

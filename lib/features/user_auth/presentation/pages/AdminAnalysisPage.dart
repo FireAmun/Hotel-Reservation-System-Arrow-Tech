@@ -11,6 +11,8 @@ class _AdminAnalysisPageState extends State<AdminAnalysisPage> {
   late Future<int> _orderCount;
   late Future<int> _complaintCount;
   late Future<int> _reservationCount;
+  late Future<int> _reviewCount;
+
   @override
   void initState() {
     super.initState();
@@ -18,6 +20,7 @@ class _AdminAnalysisPageState extends State<AdminAnalysisPage> {
     _orderCount = _getDocumentCount('orders');
     _complaintCount = _getDocumentCount('complaints');
     _reservationCount = _getReservationCount();
+    _reviewCount = _getDocumentCount('reviews'); // Add this line
   }
 
   Future<int> _getDocumentCount(String collectionName) async {
@@ -41,8 +44,13 @@ class _AdminAnalysisPageState extends State<AdminAnalysisPage> {
         title: Text('Admin Analysis'),
       ),
       body: FutureBuilder(
-        future: Future.wait(
-            [_userCount, _orderCount, _complaintCount, _reservationCount]),
+        future: Future.wait([
+          _userCount,
+          _orderCount,
+          _complaintCount,
+          _reservationCount,
+          _reviewCount // Add this line
+        ]),
         builder: (context, AsyncSnapshot<List<int>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -80,6 +88,17 @@ class _AdminAnalysisPageState extends State<AdminAnalysisPage> {
                       leading: Icon(Icons.hotel, color: Colors.purple),
                       title: Text('Total Reservations'),
                       trailing: Text(snapshot.data![3].toString(),
+                          style: TextStyle(fontSize: 20.0)),
+                    ),
+                  ),
+                  Card(
+                    child: ListTile(
+                      leading: Icon(Icons.rate_review,
+                          color: Colors.orange), // Icon for reviews
+                      title: Text('Total Reviews'), // Title for reviews
+                      trailing: Text(
+                          snapshot.data![4]
+                              .toString(), // Display total reviews count
                           style: TextStyle(fontSize: 20.0)),
                     ),
                   ),
