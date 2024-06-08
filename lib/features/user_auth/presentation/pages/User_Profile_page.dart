@@ -44,35 +44,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
           key: _formKey,
           child: ListView(
             children: <Widget>[
-              TextFormField(
-                controller: _usernameController,
-                decoration: InputDecoration(
-                  labelText: 'Username',
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.all(10.0),
-                ),
-                style: TextStyle(fontSize: 18.0),
-              ),
+              _buildCard('Username', _usernameController),
               SizedBox(height: 20.0),
-              TextFormField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.all(10.0),
-                ),
-                style: TextStyle(fontSize: 18.0),
-              ),
+              _buildCard('Email', _emailController),
               SizedBox(height: 20.0),
-              TextFormField(
-                controller: _addressController,
-                decoration: InputDecoration(
-                  labelText: 'Address',
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.all(10.0),
-                ),
-                style: TextStyle(fontSize: 18.0),
-              ),
+              _buildCard('Address', _addressController),
               SizedBox(height: 20.0),
               ElevatedButton(
                 child: const Text("Save"),
@@ -116,6 +92,33 @@ class _UserProfilePageState extends State<UserProfilePage> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCard(String title, TextEditingController controller) {
+    return Card(
+      elevation: 2.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(title, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10.0),
+            TextFormField(
+              controller: controller,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.all(10.0),
+              ),
+              style: TextStyle(fontSize: 18.0),
+            ),
+          ],
         ),
       ),
     );

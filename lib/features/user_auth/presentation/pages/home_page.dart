@@ -9,7 +9,7 @@ import 'package:hotel/features/user_auth/presentation/pages/Admin_ViewComplaints
 
 // this is home page
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +20,7 @@ class HomePage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              // Implement sign out functionality
-              Navigator.pushNamed(context,
-                  '/login'); // Modify as needed for actual sign-out logic
+              Navigator.pushNamed(context, '/login');
             },
           )
         ],
@@ -37,32 +35,22 @@ class HomePage extends StatelessWidget {
           crossAxisSpacing: 4.0,
           children: <Widget>[
             _buildCard('Book a Room', Icons.hotel, context, () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => HotelsPage()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => HotelsPage()));
             }),
             _buildCard('View Reservations', Icons.calendar_today, context, () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ReservationsPage()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ReservationsPage()));
             }),
             _buildCard('Room Service', Icons.room_service, context, () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => OrderRoomServicePage()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderRoomServicePage()));
             }),
             _buildCard('Profile', Icons.person, context, () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => UserProfilePage()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfilePage()));
             }),
             _buildCard('Complaints', Icons.report_problem, context, () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MakeComplaintsPage()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MakeComplaintsPage()));
             }),
             _buildCard('Give Us A Review', Icons.reviews, context, () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ReviewsPage()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewsPage()));
             }),
           ],
         ),
@@ -70,16 +58,20 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildCard(
-      String title, IconData icon, BuildContext context, VoidCallback onTap) {
+  Widget _buildCard(String title, IconData icon, BuildContext context, VoidCallback onTap) {
     return Card(
+      elevation: 2.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
       child: InkWell(
         onTap: onTap,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(icon, size: 40.0),
-            Text(title, style: const TextStyle(fontSize: 16.0)),
+            Icon(icon, size: 40.0, color: Theme.of(context).primaryColor),
+            SizedBox(height: 10.0),
+            Text(title, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
           ],
         ),
       ),
