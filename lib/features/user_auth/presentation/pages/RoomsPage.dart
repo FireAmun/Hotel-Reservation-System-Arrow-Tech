@@ -4,8 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 
-//roomspage
 class RoomsPage extends StatefulWidget {
   @override
   _RoomsPageState createState() => _RoomsPageState();
@@ -17,6 +19,7 @@ class _RoomsPageState extends State<RoomsPage> {
   String _selectedRoomType = 'Single';
   bool _showQRCode = false; // Added state variable
   bool _reservationMade = false; // Added state variable
+  DocumentReference? _reservationRef; // Added to store reservation reference
 
   final _fullNameController = TextEditingController();
   final _passportNumberController = TextEditingController();
@@ -30,6 +33,38 @@ class _RoomsPageState extends State<RoomsPage> {
     _phoneNumberController.dispose();
     _specialRequestsController.dispose();
     super.dispose();
+  }
+
+  Future<void> _createPdf(BuildContext context) async {
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context pdfContext) {
+          return pw.Center(
+            child: pw.Column(
+              mainAxisAlignment: pw.MainAxisAlignment.center,
+              children: [
+                pw.Text('Reservation Details',
+                    style: pw.TextStyle(fontSize: 24)),
+                pw.SizedBox(height: 20),
+                pw.Text('Date: ${_selectedDate.toLocal()}'),
+                pw.Text('Time: ${_selectedTime.format(context)}'),
+                pw.Text('Room Type: $_selectedRoomType'),
+                pw.Text('Full Name: ${_fullNameController.text}'),
+                pw.Text('Passport Number: ${_passportNumberController.text}'),
+                pw.Text('Phone Number: ${_phoneNumberController.text}'),
+                pw.Text('Special Requests: ${_specialRequestsController.text}'),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+
+    // Save the PDF document
+    await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async => pdf.save());
   }
 
   @override
@@ -155,13 +190,17 @@ class _RoomsPageState extends State<RoomsPage> {
                 DocumentReference reservationRef =
                     await FirebaseFirestore.instance.collection('rooms').add({
                   'userId': currentUser.uid,
-                  'date': _selectedDate,
+                  'date': _selectedDate.toIso8601String(),
                   'time': _selectedTime.format(context),
                   'roomType': _selectedRoomType,
                   'fullName': _fullNameController.text,
                   'passportNumber': _passportNumberController.text,
                   'phoneNumber': _phoneNumberController.text,
                   'specialRequests': _specialRequestsController.text,
+                });
+
+                setState(() {
+                  _reservationRef = reservationRef;
                 });
 
                 // Send reservation details via email
@@ -205,7 +244,6 @@ class _RoomsPageState extends State<RoomsPage> {
               }
             },
           ),
-
           // Button to show/hide QR Code
           if (_reservationMade) // Only show the button if reservation is made
             ElevatedButton(
@@ -216,11 +254,16 @@ class _RoomsPageState extends State<RoomsPage> {
                 });
               },
             ),
-
           // QR Code Image
           if (_showQRCode)
             Card(
               child: Image.asset('lib/features/pics/qr_code.png'),
+            ),
+          // Button to download PDF
+          if (_reservationMade) // Only show the button if reservation is made
+            ElevatedButton(
+              child: Text('Download PDF'),
+              onPressed: () => _createPdf(context),
             ),
         ],
       ),
