@@ -40,18 +40,31 @@ class ReservationsPage extends StatelessWidget {
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               Map<String, dynamic> data =
                   document.data() as Map<String, dynamic>;
+              bool isCheckedIn = data['checkedIn'] ?? false;
               return ListTile(
                 title: Text(
                     'Reservation for ${data['roomType']} on ${data['date']} at ${data['time']}'),
-                subtitle: Text((data['checkedIn'] ?? false)
-                    ? 'Checked in'
-                    : 'Not checked in'),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(isCheckedIn ? 'Checked in' : 'Not checked in'),
+                    if (isCheckedIn)
+                      Image.asset(
+                        'lib/features/pics/qr_code.png',
+                        height: 100, // Adjust the height as needed
+                        width: 100, // Adjust the width as needed
+                      ),
+                  ],
+                ),
                 trailing: ElevatedButton(
-                  child: Text('Check In'),
-                  onPressed: (data['checkedIn'] ?? false)
+                  child: Text(isCheckedIn ? 'Checked In' : 'Check In'),
+                  onPressed: isCheckedIn
                       ? null
                       : () {
                           document.reference.update({'checkedIn': true});
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Checked in successfully')),
+                          );
                         },
                 ),
               );

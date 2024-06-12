@@ -17,7 +17,6 @@ class _RoomsPageState extends State<RoomsPage> {
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
   String _selectedRoomType = 'Single';
-  bool _showQRCode = false; // Added state variable
   bool _reservationMade = false; // Added state variable
   DocumentReference? _reservationRef; // Added to store reservation reference
 
@@ -197,6 +196,7 @@ class _RoomsPageState extends State<RoomsPage> {
                   'passportNumber': _passportNumberController.text,
                   'phoneNumber': _phoneNumberController.text,
                   'specialRequests': _specialRequestsController.text,
+                  'checkedIn': false, // Default to not checked in
                 });
 
                 setState(() {
@@ -244,21 +244,6 @@ class _RoomsPageState extends State<RoomsPage> {
               }
             },
           ),
-          // Button to show/hide QR Code
-          if (_reservationMade) // Only show the button if reservation is made
-            ElevatedButton(
-              child: Text(_showQRCode ? 'Hide QR Code' : 'Show QR Code'),
-              onPressed: () {
-                setState(() {
-                  _showQRCode = !_showQRCode;
-                });
-              },
-            ),
-          // QR Code Image
-          if (_showQRCode)
-            Card(
-              child: Image.asset('lib/features/pics/qr_code.png'),
-            ),
           // Button to download PDF
           if (_reservationMade) // Only show the button if reservation is made
             ElevatedButton(
