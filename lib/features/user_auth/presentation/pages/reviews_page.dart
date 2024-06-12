@@ -38,26 +38,28 @@ class ReviewsPage extends StatelessWidget {
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               Map<String, dynamic> data =
                   document.data() as Map<String, dynamic>;
+              bool checkedIn = data['checkedIn'] ?? false;
+
               return Card(
                 margin: EdgeInsets.all(10),
                 child: ListTile(
                   title: Text(
                     'Reservation for ${data['roomType']} on ${data['date']} at ${data['time']}',
                   ),
-                  subtitle: Text((data['checkedIn'] ?? false)
-                      ? 'Checked in'
-                      : 'Not checked in'),
+                  subtitle: Text(checkedIn ? 'Checked in' : 'Not checked in'),
                   trailing: ElevatedButton(
                     child: Text('Review'),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ReviewForm(documentId: document.id),
-                        ),
-                      );
-                    },
+                    onPressed: checkedIn
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ReviewForm(documentId: document.id),
+                              ),
+                            );
+                          }
+                        : null,
                   ),
                 ),
               );

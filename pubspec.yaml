@@ -49,6 +49,7 @@ dependencies:
   pdf: ^3.6.1
   printing: ^5.9.0
   permission_handler: ^10.2.0
+  charts_flutter: ^0.12.0
 cloud_firestore: ^4.17.2
 firebase_auth: ^4.19.4
 firebase_storage: ^11.7.4
@@ -79,6 +80,11 @@ flutter:
     - lib/features/pics/hotel3.png
     - lib/features/pics/hotel4.png
     - lib/features/pics/hotel5.png
+    - lib/features/pics/hotel6.jpg
+    - lib/features/pics/hotel7.jpg
+    - lib/features/pics/hotel8.jpg
+    - lib/features/pics/hotel9.jpg
+    - lib/features/pics/hotel10.jpg
     - lib/features/pics/qr_code.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
