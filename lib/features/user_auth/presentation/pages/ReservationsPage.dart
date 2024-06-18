@@ -41,36 +41,73 @@ class ReservationsPage extends StatelessWidget {
               Map<String, dynamic> data =
                   document.data() as Map<String, dynamic>;
               bool isCheckedIn = data['checkedIn'] ?? false;
-              return ListTile(
-                title: Text(
-                    'Reservation for ${data['roomType']} on ${data['date']} at ${data['time']}'),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(isCheckedIn ? 'Checked in' : 'Not checked in'),
-                    if (isCheckedIn)
-                      Image.asset(
-                        'lib/features/pics/qr_code.png',
-                        height: 100, // Adjust the height as needed
-                        width: 100, // Adjust the width as needed
-                      ),
-                  ],
-                ),
-                trailing: ElevatedButton(
-                  child: Text(isCheckedIn ? 'Checked In' : 'Check In'),
-                  onPressed: isCheckedIn
-                      ? null
-                      : () {
-                          document.reference.update({'checkedIn': true});
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Checked in successfully')),
-                          );
-                        },
-                ),
-              );
+              return ReservationTile(data: data, document: document);
             }).toList(),
           );
         },
+      ),
+    );
+  }
+}
+
+class ReservationTile extends StatefulWidget {
+  final Map<String, dynamic> data;
+  final DocumentSnapshot document;
+
+  const ReservationTile({
+    required this.data,
+    required this.document,
+  });
+
+  @override
+  _ReservationTileState createState() => _ReservationTileState();
+}
+
+class _ReservationTileState extends State<ReservationTile> {
+  bool showQRCode = false;
+
+  @override
+  Widget build(BuildContext context) {
+    bool isCheckedIn = widget.data['checkedIn'] ?? false;
+    return ListTile(
+      title: Text(
+          'Reservation for ${widget.data['roomType']} on ${widget.data['date']} at ${widget.data['time']}'),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(isCheckedIn ? 'Checked in' : 'Not checked in'),
+          if (isCheckedIn)
+            Column(
+              children: [
+                ElevatedButton(
+                  child: Text(showQRCode ? 'Hide QR Code' : 'Show QR Code'),
+                  onPressed: () {
+                    setState(() {
+                      showQRCode = !showQRCode;
+                    });
+                  },
+                ),
+                if (showQRCode)
+                  Image.asset(
+                    'lib/features/pics/qr_code.png',
+                    height: 300, // Full image size
+                    width: 300, // Full image size
+                  ),
+              ],
+            ),
+        ],
+      ),
+      trailing: ElevatedButton(
+        child: Text(isCheckedIn ? 'Checked In' : 'Check In'),
+        onPressed: isCheckedIn
+            ? null
+            : () {
+                widget.document.reference.update({'checkedIn': true});
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Checked in successfully')),
+                );
+                setState(() {}); // Update the state to reflect the change
+              },
       ),
     );
   }
